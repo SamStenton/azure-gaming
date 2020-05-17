@@ -1,0 +1,39 @@
+
+- name: Bootstrap Machine
+  connection: hosts.ini
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Install Parsec
+      win_chocolatey:
+        name: parsec
+    - name: Install Steam
+      win_chocolatey:
+        name: steam
+    - name: Get Virtual Audio
+      win_get_url:
+        url: https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack43.zip
+        dest: C:\Users\CloudGamer\VBCABLE_Driver_Pack43.zip
+    - name: Unzip gz log
+      win_unzip:
+        src: C:\Users\CloudGamer\VBCABLE_Driver_Pack43.zip
+        dest: C:\Users\CloudGamer\Desktop\VBCABLE_Driver_Pack43
+    - name: Install .Net 3.5
+      win_chocolatey:
+        name: dogtail.dotnet3.5sp1
+    - name: Enable audio service
+      win_service:
+        name: 'Audiosrv'
+        start_mode: auto
+        state: started
+    - name: Disable firewall for Domain, Public and Private profiles
+      win_firewall:
+        state: disabled
+        profiles:
+        - Domain
+        - Private
+        - Public
+    - name: Disable Default PNP Monitor
+      win_shell: Disable-PnpDevice -InstanceId 'DISPLAY\MSH062E\6&1a097cd8&0&UID5527112' -confirm:$false
+    - name: Disable Default Display Adapter
+      win_shell: Disable-PnpDevice -InstanceId 'VMBUS\{DA0A7802-E377-4AAC-8E77-0558EB1073F8}\{5620E0C7-8062-4DCE-AEB7-520C7EF76171}' -confirm:$false

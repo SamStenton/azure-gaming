@@ -1,0 +1,8 @@
+[win]
+your.machine.ip
+
+[win:vars]
+ansible_user=CloudGamer
+ansible_password=addpassword
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
